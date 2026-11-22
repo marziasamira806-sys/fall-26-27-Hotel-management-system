@@ -1,4 +1,4 @@
-/* COMMON CUSTOMER FUNCTIONS */
+/* COMMON CUSTOMER FUNCTIONS - 24-57252-2 (Samira) */
 
 document.addEventListener("DOMContentLoaded", function () {
 
