@@ -10,58 +10,59 @@
 
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
+    <!-- Sidebar (baam dik-er menu) -->
+    <div class="sidebar">
 
         <div class="logo">
-            <h2>🏨 Hotel Management System</h2>
+            <h2>Hotel Management System</h2>
             <p>Room-Service Staff Portal</p>
         </div>
 
-       <nav class="sidebar-menu">
-            <a href="dashboard_rafi.html">🏠 Dashboard</a>
-            <a href="food_order.html">🛒 Food Orders</a>
-            <a href="room_issue.html">🗑 Room Issue Report</a>
-            <a href="traycollection.html">🛒 Tray Collection</a>
-            <a href="amenities.html"class="active">♙ Amenities Request</a>
-            <a href="login.html">↪ Logout</a>
+        <nav class="sidebar-menu">
+            <a href="dashboard_rafi.html">Dashboard</a>
+            <a href="food_order.html">Food Orders</a>
+            <a href="room_issue.html">Room Issue Report</a>
+            <a href="traycollection.html">Tray Collection</a>
+            <a href="amenities.html" class="active">Amenities Request</a>
+            <a href="login.html" onclick="logout()">Logout</a>
         </nav>
 
-    </aside>
+    </div>
 
 
-    <!-- Main Content -->
+    <!-- Main Content (maje-r ongsho) -->
     <main class="main-content">
 
 
-        <!-- Header -->
+        <!-- Header (upor-er ongsho) -->
         <header class="top-header">
 
             <h1>5. Room Amenities Request</h1>
 
             <div class="profile">
-                <span>👤</span>
-                <span>Staff Member</span>
-                <span>⌄</span>
+                <span>S</span>
+                <span id="profile-name">Staff Member</span>
             </div>
 
         </header>
 
+        <div id="pageMessage" class="message"></div>
 
-        <!-- Add New Amenities Request Section -->
+
+        <!-- Notun Amenities Request add korar ongsho -->
         <section class="amenities-top-section">
 
 
-            <!-- Add New Amenities Request Form -->
+            <!-- Notun Amenities Request-er form -->
             <div class="add-amenities-card">
 
-                <h2>🎁 Add New Amenities Request</h2>
+                <h2>Add New Amenities Request</h2>
 
-                <form action="#" method="post">
+                <form action="#" method="post" id="amenity-form" onsubmit="return saveRequest()">
 
                     <div class="form-row">
 
-                        <!-- Room Number -->
+                        <!-- Room Number-er field -->
                         <div class="form-group">
 
                             <label for="room-number">
@@ -73,57 +74,39 @@
                                 id="room-number"
                                 name="room_number"
                                 placeholder="e.g., 305"
-                        
                             >
+
+                            <span class="error" id="room-numberError"></span>
 
                         </div>
 
 
-                        <!-- Item Name -->
+                        <!-- Item Name-er field -->
                         <div class="form-group">
 
                             <label for="item-name">
                                 Item Name
                             </label>
 
-                            <select
-                                id="item-name"
-                                name="item_name"
-                                
-                            >
+                            <select id="item-name" name="item_name">
 
-                                <option value="">
-                                    Select Item
-                                </option>
-
-                                <option value="Extra Towel">
-                                    Extra Towel
-                                </option>
-
-                                <option value="Water Bottle">
-                                    Water Bottle
-                                </option>
-
-                                <option value="Soap">
-                                    Soap
-                                </option>
-
-                                <option value="Toiletries Kit">
-                                    Toiletries Kit
-                                </option>
-
-                                <option value="Pillow">
-                                    Pillow
-                                </option>
+                                <option value="">Select Item</option>
+                                <option value="Extra Towel">Extra Towel</option>
+                                <option value="Water Bottle">Water Bottle</option>
+                                <option value="Soap">Soap</option>
+                                <option value="Toiletries Kit">Toiletries Kit</option>
+                                <option value="Pillow">Pillow</option>
 
                             </select>
+
+                            <span class="error" id="item-nameError"></span>
 
                         </div>
 
                     </div>
 
 
-                    <!-- Add Request Button -->
+                    <!-- Add Request button -->
                     <button type="submit" class="add-request-btn">
                         Add Request
                     </button>
@@ -133,22 +116,22 @@
             </div>
 
 
-            <!-- Available Items -->
+            <!-- Je je item pawa jay tar list -->
             <div class="available-items-card">
 
-                <h2>🎁 Available Items</h2>
+                <h2>Available Items</h2>
 
-                <ul class="available-items-list">
+                <ul class="available-items-list" id="available-items-list">
 
-                    <li>✔ Extra Towel</li>
+                    <li>Extra Towel</li>
 
-                    <li>✔ Water Bottle</li>
+                    <li>Water Bottle</li>
 
-                    <li>✔ Soap</li>
+                    <li>Soap</li>
 
-                    <li>✔ Toiletries Kit</li>
+                    <li>Toiletries Kit</li>
 
-                    <li>✔ Pillow</li>
+                    <li>Pillow</li>
 
                 </ul>
 
@@ -158,21 +141,23 @@
 
 
 
-        <!-- Amenities Request List -->
+        <!-- Amenities Request-er list -->
         <section class="amenities-request-list">
 
-            <h2>🎁 Amenities Request List</h2>
+            <h2>Amenities Request List</h2>
 
 
-            <!-- Search Section -->
+            <!-- Search korar ongsho -->
             <div class="search-section">
 
-                <form action="#" method="get">
+                <form action="#" method="get" onsubmit="return searchRequests()">
 
                     <input
                         type="text"
+                        id="search-input"
                         name="search"
-                        placeholder="⌕ Search by room number..."
+                        placeholder="Search by room number..."
+                        onkeyup="renderRequests()"
                     >
 
                     <button type="submit" class="search-btn">
@@ -184,7 +169,7 @@
             </div>
 
 
-            <!-- Amenities Request Table -->
+            <!-- Amenities Request-er table -->
             <table>
 
                 <thead>
@@ -200,9 +185,9 @@
                 </thead>
 
 
-                <tbody>
+                <tbody id="amenity-table-body">
 
-                    <!-- First Request -->
+                    <!-- Prothom request -->
                     <tr>
 
                         <td>AR001</td>
@@ -222,7 +207,7 @@
                     </tr>
 
 
-                    <!-- Second Request -->
+                    <!-- Ditiyo request -->
                     <tr>
 
                         <td>AR002</td>
@@ -242,7 +227,7 @@
                     </tr>
 
 
-                    <!-- Third Request -->
+                    <!-- Tritiyo request -->
                     <tr>
 
                         <td>AR003</td>

@@ -1,4 +1,8 @@
+/* =====================================================================
+   room_service.css  -  Room-Service Staff Portal-er style sheet
+   ===================================================================== */
 
+/* ---------- 1. Reset ebong page-er shuru-r mon ---------- */
 
 * {
     margin: 0;
@@ -6,48 +10,11 @@
     box-sizing: border-box;
 }
 
-:root {
-    --navy: #071d42;
-    --navy-dark: #041632;
-    --navy-light: #102d59;
-
-    --blue: #0875dc;
-    --blue-dark: #075bb5;
-    --blue-light: #e8f2ff;
-
-    --background: #eef3fc;
-    --white: #ffffff;
-
-    --text: #101b32;
-    --muted: #64748b;
-
-    --border: #dce5f0;
-    --table-head: #e5edf7;
-
-    --green: #19a34a;
-    --green-light: #d9f6df;
-
-    --orange: #ed9b18;
-    --orange-light: #fff0cc;
-
-    --red: #d62835;
-    --red-dark: #b91c2a;
-
-    --purple: #8045d5;
-
-    --shadow: 0 5px 16px rgba(15, 39, 76, 0.09);
-    --radius: 13px;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
 body {
     min-height: 100vh;
     display: flex;
-    background: var(--background);
-    color: var(--text);
+    background-color: #eef3fc;
+    color: #101b32;
     font-family: "Segoe UI", Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
@@ -62,7 +29,8 @@ button,
 input,
 select,
 textarea {
-    font: inherit;
+    font-family: inherit;
+    font-size: inherit;
 }
 
 button {
@@ -79,17 +47,14 @@ button {
 
     padding: 22px 15px;
 
-    display: flex;
-    flex-direction: column;
-
-    background: var(--navy);
-    color: var(--white);
+    background-color: #071d42;
+    color: #ffffff;
 
     box-shadow: 3px 0 15px rgba(0, 0, 0, 0.12);
 }
 
 
-/* Logo Section */
+/* Logo-r ongsho */
 
 .logo {
     padding: 5px 8px 25px;
@@ -99,7 +64,7 @@ button {
 }
 
 .logo h2 {
-    color: var(--white);
+    color: #ffffff;
     font-size: 17px;
     font-weight: 700;
     line-height: 1.4;
@@ -112,42 +77,35 @@ button {
 }
 
 
-/* Sidebar Navigation */
-
-.sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+/* Sidebar-er menu */
 
 .sidebar-menu a {
     min-height: 43px;
 
     display: flex;
     align-items: center;
-    gap: 11px;
 
+    margin-bottom: 8px;
     padding: 10px 13px;
 
     color: #e1eaf5;
-    background: transparent;
 
     border-radius: 8px;
 
     font-size: 13px;
     font-weight: 600;
 
-    transition: 0.2s ease;
+    transition: 0.3s;
 }
 
 .sidebar-menu a:hover {
-    color: var(--white);
-    background: var(--navy-light);
+    color: #ffffff;
+    background-color: #102d59;
 }
 
 .sidebar-menu a.active {
-    color: var(--white);
-    background: #075bd5;
+    color: #ffffff;
+    background-color: #075bd5;
     box-shadow: 0 3px 10px rgba(0, 85, 210, 0.25);
 }
 
@@ -156,11 +114,11 @@ button {
 }
 
 .sidebar-menu a:last-child:hover {
-    background: rgba(214, 40, 53, 0.2);
+    background-color: rgba(214, 40, 53, 0.2);
 }
 
 
-/* ---------- 3. Main Content ---------- */
+/* ---------- 3. Main Content (maje-r ongsho) ---------- */
 
 .main-content {
     flex: 1;
@@ -168,11 +126,11 @@ button {
 
     padding: 20px 25px 30px;
 
-    background: var(--background);
+    background-color: #eef3fc;
 }
 
 
-/* ---------- 4. Top Header ---------- */
+/* ---------- 4. Upor-er Header ---------- */
 
 .top-header {
     min-height: 55px;
@@ -186,14 +144,14 @@ button {
 }
 
 .top-header h1 {
-    color: var(--navy);
+    color: #071d42;
     font-size: 25px;
     font-weight: 800;
     line-height: 1.3;
 }
 
 
-/* Staff Profile */
+/* Staff-er profile */
 
 .profile {
     display: flex;
@@ -203,13 +161,13 @@ button {
 
     padding: 7px 14px;
 
-    background: var(--white);
-    border: 1px solid var(--border);
+    background-color: #ffffff;
+    border: 1px solid #dce5f0;
     border-radius: 30px;
 
     box-shadow: 0 3px 9px rgba(15, 39, 76, 0.07);
 
-    color: var(--navy);
+    color: #071d42;
     font-size: 12px;
     font-weight: 700;
 
@@ -224,15 +182,15 @@ button {
     align-items: center;
     justify-content: center;
 
-    background: var(--navy);
-    color: var(--white);
+    background-color: #071d42;
+    color: #ffffff;
 
     border-radius: 50%;
-    font-size: 19px;
+    font-size: 15px;
 }
 
 
-/* ---------- 5. Shared Cards ---------- */
+/* ---------- 5. Shobar jonno card ---------- */
 
 .panel,
 .summary-card,
@@ -248,10 +206,10 @@ button {
 .amenities-request-list,
 .quick-access,
 .recent-activities {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    background-color: #ffffff;
+    border: 1px solid #dce5f0;
+    border-radius: 13px;
+    box-shadow: 0 5px 16px rgba(15, 39, 76, 0.09);
 }
 
 section {
@@ -261,16 +219,16 @@ section {
 section h2 {
     margin-bottom: 14px;
 
-    color: var(--navy);
+    color: #071d42;
     font-size: 17px;
-    font-weight: 750;
+    font-weight: 700;
 }
 
 
 /* ---------- 6. Staff Dashboard ---------- */
 
 
-/* Welcome Banner */
+/* Shagotom banner */
 
 .welcome-banner {
     min-height: 185px;
@@ -285,15 +243,10 @@ section h2 {
 
     overflow: hidden;
 
-    background: linear-gradient(
-        110deg,
-        #071b3d 0%,
-        #0b2d60 65%,
-        #164a86 100%
-    );
+    background-color: #0b2d60;
 
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    border-radius: 13px;
+    box-shadow: 0 5px 16px rgba(15, 39, 76, 0.09);
 }
 
 .welcome-text {
@@ -304,7 +257,7 @@ section h2 {
 .welcome-text h1 {
     margin-bottom: 9px;
 
-    color: var(--white);
+    color: #ffffff;
     font-size: 25px;
     font-weight: 800;
     line-height: 1.25;
@@ -319,7 +272,6 @@ section h2 {
 .welcome-image {
     width: 35%;
     height: 145px;
-    flex: 0 0 35%;
 
     overflow: hidden;
     border-radius: 10px;
@@ -327,14 +279,11 @@ section h2 {
 
 .welcome-image img {
     width: 100%;
-    height: 100%;
-
-    object-fit: cover;
     border-radius: 10px;
 }
 
 
-/* Dashboard Summary Cards */
+/* Dashboard-er shonkhyar card */
 
 .summary-cards {
     display: grid;
@@ -353,43 +302,48 @@ section h2 {
 
     padding: 13px 15px;
 
-    transition: 0.2s ease;
+    transition: 0.3s;
 }
 
 .summary-card:hover {
-    transform: translateY(-2px);
+    transform: scale(1.02);
     box-shadow: 0 7px 18px rgba(15, 39, 76, 0.12);
 }
 
 .card-icon {
     width: 45px;
     height: 45px;
-    flex: 0 0 45px;
+    min-width: 45px;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    background: var(--blue-light);
+    background-color: #e8f2ff;
+    color: #075bd5;
     border-radius: 11px;
 
-    font-size: 23px;
+    font-size: 20px;
+    font-weight: 800;
 }
 
-.summary-card:nth-child(2) .card-icon {
-    background: #fff0df;
+.icon-orange {
+    background-color: #fff0df;
+    color: #a45b09;
 }
 
-.summary-card:nth-child(3) .card-icon {
-    background: #f1e9ff;
+.icon-purple {
+    background-color: #f1e9ff;
+    color: #6b3fb5;
 }
 
-.summary-card:nth-child(4) .card-icon {
-    background: #e5f8e8;
+.icon-green {
+    background-color: #e5f8e8;
+    color: #176b32;
 }
 
 .summary-card h3 {
-    color: var(--text);
+    color: #101b32;
     font-size: 12px;
     font-weight: 700;
 }
@@ -397,69 +351,13 @@ section h2 {
 .summary-card h2 {
     margin: 1px 0 0;
 
-    color: var(--navy);
+    color: #071d42;
     font-size: 23px;
     font-weight: 800;
 }
 
 
-/* Quick Access */
-
-.quick-access {
-    padding: 15px 17px;
-    margin-bottom: 17px;
-}
-
-.quick-access h2 {
-    margin-bottom: 12px;
-}
-
-.quick-access-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-}
-
-.quick-access-buttons a {
-    min-height: 45px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-
-    padding: 10px;
-
-    color: var(--navy);
-    background: #f0f4ff;
-
-    border: 1px solid #e2eaf7;
-    border-radius: 8px;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    transition: 0.2s ease;
-}
-
-.quick-access-buttons a:hover {
-    color: var(--white);
-    background: var(--blue);
-    border-color: var(--blue);
-}
-
-.quick-access-buttons a span {
-    color: var(--blue);
-    font-size: 20px;
-    font-weight: 800;
-}
-
-.quick-access-buttons a:hover span {
-    color: var(--white);
-}
-
-
-/* Recent Activities */
+/* Shomprotik kaj */
 
 .recent-activities {
     padding: 15px 17px;
@@ -467,11 +365,6 @@ section h2 {
 
 .recent-activities h2 {
     margin-bottom: 9px;
-}
-
-.activity-list {
-    display: flex;
-    flex-direction: column;
 }
 
 .activity-item {
@@ -483,14 +376,14 @@ section h2 {
 
     padding: 7px 10px;
 
-    background: #f3f6ff;
+    background-color: #f3f6ff;
     border-bottom: 1px solid #e5eaf3;
 
     font-size: 11px;
 }
 
 .activity-item:nth-child(even) {
-    background: #edf2fc;
+    background-color: #edf2fc;
 }
 
 .activity-item:last-child {
@@ -498,31 +391,132 @@ section h2 {
 }
 
 .activity-icon {
-    font-size: 15px;
+    min-width: 58px;
+
+    color: #164f9e;
+    font-size: 11px;
+    font-weight: 800;
 }
 
 .room-number {
     min-width: 78px;
-    color: var(--navy);
+    color: #071d42;
     font-weight: 700;
 }
 
 .activity-description {
     flex: 1;
-    color: var(--text);
+    color: #101b32;
 }
 
 .activity-time {
-    color: var(--navy);
+    color: #071d42;
     font-weight: 700;
     white-space: nowrap;
 }
 
 
-/* ---------- 7. Food Order Management ---------- */
+/* ---------- 7. Form (shob page-e use hoy) ---------- */
+
+.form-group {
+    min-width: 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+
+    color: #101b32;
+    font-size: 12px;
+    font-weight: 700;
+}
 
 
-/* Create Order Card */
+/* Form-er input gulo */
+
+input,
+select,
+textarea {
+    display: block;
+    width: 100%;
+    min-height: 42px;
+
+    padding: 9px 12px;
+
+    color: #101b32;
+    background-color: #ffffff;
+
+    border: 1px solid #d5deea;
+    border-radius: 7px;
+
+    outline: none;
+    font-size: 12px;
+
+    transition: 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #0875dc;
+    box-shadow: 0 0 0 3px rgba(8, 117, 220, 0.10);
+}
+
+textarea {
+    min-height: 60px;
+    resize: none;
+}
+
+
+/* Header-er niche message, ebong field-er niche error lekha */
+
+.message {
+    display: none;
+
+    margin-bottom: 16px;
+    padding: 12px 16px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.message.success {
+    color: #176b32;
+    background-color: #d9f6df;
+    border-left: 4px solid #19a34a;
+}
+
+.message.error {
+    color: #b91c2a;
+    background-color: #fde4e6;
+    border-left: 4px solid #d62835;
+    font-size: 13px;
+}
+
+.message.info {
+    color: #164f9e;
+    background-color: #dceaff;
+    border-left: 4px solid #0875dc;
+}
+
+.error {
+    color: #d62835;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* JavaScript na dekhano porjonto lukano thake (food order form-er edit mode) */
+.edit-only {
+    display: none;
+}
+
+
+/* ---------- 8. Food Order porichalona ---------- */
+
+
+/* Order toiri-r card */
 
 .order-form-section {
     padding: 18px 20px;
@@ -534,79 +528,25 @@ section h2 {
 }
 
 
-/* Food Order Form */
+/* Food Order-er form */
 
 .order-form-section form {
     display: grid;
     grid-template-columns: 1.15fr 1.15fr 0.7fr auto;
-    align-items: end;
+    align-items: center;
     gap: 14px;
 }
 
-.form-group {
-    min-width: 0;
 
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.form-group label {
-    color: var(--text);
-    font-size: 12px;
-    font-weight: 700;
-}
-
-
-/* Form Inputs */
-
-input[type="text"],
-input[type="number"],
-select,
-textarea {
-    width: 100%;
-    min-height: 42px;
-
-    padding: 9px 12px;
-
-    color: var(--text);
-    background: var(--white);
-
-    border: 1px solid #d5deea;
-    border-radius: 7px;
-
-    outline: none;
-    font-size: 12px;
-
-    transition: 0.2s ease;
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: #8997a9;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(8, 117, 220, 0.10);
-}
-
-textarea {
-    min-height: 60px;
-    resize: vertical;
-}
-
-
-/* Add Order Button */
+/* Add Order button */
 
 .add-order-btn {
     min-height: 42px;
+    margin-top: 24px;
     padding: 9px 22px;
 
-    color: var(--white);
-    background: var(--blue);
+    color: #ffffff;
+    background-color: #0875dc;
 
     border: none;
     border-radius: 7px;
@@ -614,15 +554,15 @@ textarea {
     font-size: 12px;
     font-weight: 700;
 
-    transition: 0.2s ease;
+    transition: 0.3s;
 }
 
 .add-order-btn:hover {
-    background: var(--blue-dark);
+    background-color: #075bb5;
 }
 
 
-/* Food Order List */
+/* Food Order-er list */
 
 .food-order-list {
     padding: 18px 19px;
@@ -633,7 +573,7 @@ textarea {
 }
 
 
-/* Search and Filter */
+/* Search ebong Filter */
 
 .search-filter {
     display: flex;
@@ -665,22 +605,21 @@ textarea {
 }
 
 
-/* ---------- 8. Room Issue Report ---------- */
+/* ---------- 9. Room Issue Report ---------- */
 
 
-/* Two Column Layout */
+/* Dui column-er layout */
 
 .report-section {
     display: grid;
     grid-template-columns: 1.55fr 1fr;
-    align-items: start;
     gap: 16px;
 
     margin-bottom: 17px;
 }
 
 
-/* Report Form */
+/* Report-er form */
 
 .report-form-card {
     padding: 17px 19px;
@@ -690,10 +629,8 @@ textarea {
     margin-bottom: 12px;
 }
 
-.report-form-card form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.report-form-card .form-group {
+    margin-bottom: 10px;
 }
 
 .report-form-card textarea {
@@ -701,11 +638,12 @@ textarea {
 }
 
 .submit-issue-btn {
+    display: block;
     width: 100%;
     min-height: 41px;
 
-    color: var(--white);
-    background: var(--blue);
+    color: #ffffff;
+    background-color: #0875dc;
 
     border: none;
     border-radius: 7px;
@@ -715,11 +653,11 @@ textarea {
 }
 
 .submit-issue-btn:hover {
-    background: var(--blue-dark);
+    background-color: #075bb5;
 }
 
 
-/* Issue Status Guide */
+/* Issue Status-er guide */
 
 .status-guide {
     padding: 17px 19px;
@@ -742,38 +680,38 @@ textarea {
 }
 
 .status-item p {
-    color: var(--text);
+    color: #101b32;
     font-size: 12px;
     font-weight: 500;
 }
 
 .status-item strong {
-    color: var(--navy);
+    color: #071d42;
     font-weight: 800;
 }
 
 .status-dot {
     width: 14px;
     height: 14px;
-    flex: 0 0 14px;
+    min-width: 14px;
 
     border-radius: 50%;
 }
 
 .pending-dot {
-    background: var(--orange);
+    background-color: #ed9b18;
 }
 
 .processing-dot {
-    background: #0875dc;
+    background-color: #0875dc;
 }
 
 .solved-dot {
-    background: var(--green);
+    background-color: #19a34a;
 }
 
 
-/* Issue Report List */
+/* Issue Report-er list */
 
 .issue-report-list {
     padding: 17px 19px;
@@ -784,11 +722,11 @@ textarea {
 }
 
 
-/* Search Section */
+/* Search-er ongsho */
 
 .search-section {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
 
     margin-bottom: 12px;
 }
@@ -799,8 +737,8 @@ textarea {
 
     padding: 8px 18px;
 
-    color: var(--white);
-    background: var(--blue);
+    color: #ffffff;
+    background-color: #0875dc;
 
     border: none;
     border-radius: 7px;
@@ -810,14 +748,14 @@ textarea {
 }
 
 .search-btn:hover {
-    background: var(--blue-dark);
+    background-color: #075bb5;
 }
 
 
-/* ---------- 9. Tray Collection Alert ---------- */
+/* ---------- 10. Tray Collection Alert ---------- */
 
 
-/* Alert Section */
+/* Alert-er ongsho */
 
 .tray-alert-section {
     padding: 17px 19px;
@@ -829,7 +767,7 @@ textarea {
 }
 
 
-/* Tray History */
+/* Tray-er itihash */
 
 .tray-history-section {
     padding: 17px 19px;
@@ -840,7 +778,7 @@ textarea {
 }
 
 
-/* Collect Tray Button */
+/* Collect Tray button */
 
 .collect-btn {
     min-width: 125px;
@@ -848,8 +786,8 @@ textarea {
 
     padding: 8px 14px;
 
-    color: var(--white);
-    background: var(--blue);
+    color: #ffffff;
+    background-color: #0875dc;
 
     border: none;
     border-radius: 7px;
@@ -857,30 +795,29 @@ textarea {
     font-size: 12px;
     font-weight: 700;
 
-    transition: 0.2s ease;
+    transition: 0.3s;
 }
 
 .collect-btn:hover {
-    background: var(--blue-dark);
+    background-color: #075bb5;
 }
 
 
-/* ---------- 10. Room Amenities Request ---------- */
+/* ---------- 11. Room Amenities Request ---------- */
 
 
-/* Top Section */
+/* Upor-er ongsho */
 
 .amenities-top-section {
     display: grid;
     grid-template-columns: 1.65fr 1fr;
-    align-items: stretch;
     gap: 17px;
 
     margin-bottom: 19px;
 }
 
 
-/* Add Amenities Card */
+/* Amenities add korar card */
 
 .add-amenities-card {
     padding: 17px 19px;
@@ -890,33 +827,27 @@ textarea {
     margin-bottom: 13px;
 }
 
-
-/* Amenities Form */
-
-.add-amenities-card form {
-    display: flex;
-    flex-direction: column;
-    gap: 17px;
-}
-
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
+
+    margin-bottom: 17px;
 }
 
 
-/* Add Request Button */
+/* Add Request button */
 
 .add-request-btn {
+    display: block;
     width: 55%;
     min-height: 41px;
-    align-self: center;
 
+    margin: 0 auto;
     padding: 9px 20px;
 
-    color: var(--white);
-    background: var(--blue);
+    color: #ffffff;
+    background-color: #0875dc;
 
     border: none;
     border-radius: 7px;
@@ -926,11 +857,11 @@ textarea {
 }
 
 .add-request-btn:hover {
-    background: var(--blue-dark);
+    background-color: #075bb5;
 }
 
 
-/* Available Items */
+/* Je item pawa jay */
 
 .available-items-card {
     padding: 17px 19px;
@@ -941,25 +872,19 @@ textarea {
 }
 
 .available-items-list {
-    list-style: none;
-
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    padding: 0 0 0 18px;
 }
 
 .available-items-list li {
-    color: var(--text);
+    margin-bottom: 5px;
+
+    color: #101b32;
     font-size: 13px;
-    font-weight: 650;
-}
-
-.available-items-list li::first-letter {
-    color: var(--green);
+    font-weight: 600;
 }
 
 
-/* Amenities Request List */
+/* Amenities Request-er list */
 
 .amenities-request-list {
     padding: 17px 19px;
@@ -970,23 +895,23 @@ textarea {
 }
 
 
-/* ---------- 11. Shared Tables ---------- */
+/* ---------- 12. Shobar table ---------- */
 
 table {
     width: 100%;
     border-collapse: collapse;
-    background: var(--white);
+    background-color: #ffffff;
     font-size: 12px;
 }
 
 thead {
-    background: var(--table-head);
+    background-color: #e5edf7;
 }
 
 th {
     padding: 12px 11px;
 
-    color: var(--navy);
+    color: #071d42;
     font-size: 12px;
     font-weight: 800;
 
@@ -997,23 +922,22 @@ th {
 td {
     padding: 11px 10px;
 
-    color: var(--text);
+    color: #101b32;
     text-align: center;
 
     border-bottom: 1px solid #e7edf5;
-    vertical-align: middle;
 }
 
 tbody tr {
-    transition: background 0.2s ease;
+    transition: 0.3s;
 }
 
 tbody tr:nth-child(even) {
-    background: #f7f9fd;
+    background-color: #f7f9fd;
 }
 
 tbody tr:hover {
-    background: #edf4ff;
+    background-color: #edf4ff;
 }
 
 tbody tr:last-child td {
@@ -1021,7 +945,7 @@ tbody tr:last-child td {
 }
 
 
-/* ---------- 12. Shared Status Labels ---------- */
+/* ---------- 13. Shobar Status label ---------- */
 
 .status {
     display: inline-block;
@@ -1042,30 +966,30 @@ tbody tr:last-child td {
 .status.pending,
 .status.eating-finished {
     color: #a45b09;
-    background: var(--orange-light);
+    background-color: #fff0cc;
 }
 
 
-/* Preparing and Processing */
+/* Preparing ebong Processing */
 
 .status.preparing,
 .status.processing {
     color: #164f9e;
-    background: #dceaff;
+    background-color: #dceaff;
 }
 
 
-/* Delivered, Solved and Collected */
+/* Delivered, Solved ebong Collected */
 
 .status.delivered,
 .status.solved,
 .status.tray-collected {
     color: #176b32;
-    background: var(--green-light);
+    background-color: #d9f6df;
 }
 
 
-/* ---------- 13. Action Buttons ---------- */
+/* ---------- 14. Action button ---------- */
 
 .edit-btn,
 .update-btn {
@@ -1074,8 +998,8 @@ tbody tr:last-child td {
 
     padding: 6px 12px;
 
-    color: var(--white);
-    background: var(--blue);
+    color: #ffffff;
+    background-color: #0875dc;
 
     border: none;
     border-radius: 6px;
@@ -1086,7 +1010,7 @@ tbody tr:last-child td {
 
 .edit-btn:hover,
 .update-btn:hover {
-    background: var(--blue-dark);
+    background-color: #075bb5;
 }
 
 
@@ -1096,8 +1020,8 @@ tbody tr:last-child td {
 
     padding: 6px 12px;
 
-    color: var(--white);
-    background: var(--red);
+    color: #ffffff;
+    background-color: #d62835;
 
     border: none;
     border-radius: 6px;
@@ -1107,202 +1031,5 @@ tbody tr:last-child td {
 }
 
 .delete-btn:hover {
-    background: var(--red-dark);
-}
-
-
-/* ---------- 14. Responsive Design ---------- */
-
-@media (max-width: 1100px) {
-
-    .sidebar {
-        width: 225px;
-        min-width: 225px;
-    }
-
-    .main-content {
-        padding: 19px;
-    }
-
-    .summary-cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .quick-access-buttons {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .order-form-section form {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .report-section,
-    .amenities-top-section {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .food-order-list,
-    .issue-report-list,
-    .tray-alert-section,
-    .tray-history-section,
-    .amenities-request-list {
-        overflow-x: auto;
-    }
-
-}
-
-
-@media (max-width: 760px) {
-
-    body {
-        display: block;
-    }
-
-    .sidebar {
-        width: 100%;
-        min-width: 0;
-        min-height: auto;
-
-        padding: 14px;
-    }
-
-    .logo {
-        padding: 5px 7px 13px;
-        margin-bottom: 10px;
-    }
-
-    .sidebar-menu {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 6px;
-    }
-
-    .sidebar-menu a {
-        min-height: 35px;
-        padding: 7px 10px;
-        font-size: 11px;
-    }
-
-    .sidebar-menu a:last-child {
-        margin-top: 0;
-    }
-
-    .main-content {
-        padding: 17px 14px 25px;
-    }
-
-    .top-header h1 {
-        font-size: 21px;
-    }
-
-    .welcome-banner {
-        padding: 18px;
-    }
-
-    .welcome-text h1 {
-        font-size: 21px;
-    }
-
-    .report-section,
-    .amenities-top-section {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-@media (max-width: 520px) {
-
-    .top-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .top-header h1 {
-        font-size: 20px;
-    }
-
-    .welcome-banner {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .welcome-image {
-        width: 100%;
-        height: 150px;
-        flex-basis: auto;
-    }
-
-    .summary-cards {
-        grid-template-columns: 1fr 1fr;
-        gap: 9px;
-    }
-
-    .summary-card {
-        padding: 10px;
-        gap: 8px;
-    }
-
-    .card-icon {
-        width: 36px;
-        height: 36px;
-        flex-basis: 36px;
-        font-size: 18px;
-    }
-
-    .summary-card h3 {
-        font-size: 10px;
-    }
-
-    .summary-card h2 {
-        font-size: 19px;
-    }
-
-    .quick-access-buttons {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .quick-access-buttons a {
-        font-size: 10px;
-    }
-
-    .order-form-section form,
-    .form-row {
-        grid-template-columns: 1fr;
-    }
-
-    .add-request-btn {
-        width: 100%;
-    }
-
-    .search-filter {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .search-filter form {
-        flex-wrap: wrap;
-    }
-
-    .search-filter select {
-        width: 100%;
-    }
-
-    .activity-item {
-        flex-wrap: wrap;
-    }
-
-    .activity-description {
-        min-width: 100%;
-        padding-left: 25px;
-    }
-
-    .activity-time {
-        margin-left: auto;
-    }
-
-    table {
-        min-width: 650px;
-    }
-
+    background-color: #b91c2a;
 }

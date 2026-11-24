@@ -1,84 +1,94 @@
+/* =====================================================================
+   traycollection.js  -  Tray collection-er alert ebong itihash
+   ===================================================================== */
+
+let alertBody = document.getElementById("tray-alert-body");
+let historyBody = document.getElementById("tray-history-body");
 
 
-document.addEventListener("DOMContentLoaded", () => {
+/* ---------- Duto table-i dekhano ---------- */
 
-    const alertBody = document.querySelector(".tray-alert-section tbody");
-    const historyBody = document.querySelector(".tray-history-section tbody");
+function renderTrays() {
 
+    let allOrders = DB.get(KEYS.FOOD);
+    let alertsHTML = "";
+    let alertCount = 0;
+    let historyList = [];
 
-    /* ---------- Show both tables ---------- */
+    for (let i = 0; i < allOrders.length; i++) {
+        let order = allOrders[i];
 
-    function render() {
-
-        const orders = DB.get(KEYS.FOOD);
-
-        const alerts = orders.filter(order => order.trayStatus === "Eating Finished");
-
-        const history = orders
-            .filter(order => order.trayStatus === "Tray Collected")
-            .sort((a, b) => parseTime(b.collectedTime) - parseTime(a.collectedTime));   // latest first
-
-        /* Alerts */
-        if (alerts.length === 0) {
-            alertBody.innerHTML = `<tr><td colspan="6">No trays waiting for collection.</td></tr>`;
-        } else {
-            alertBody.innerHTML = alerts.map(order => `
-                <tr data-id="${escapeHTML(order.id)}">
-                    <td>${escapeHTML(order.id)}</td>
-                    <td>${escapeHTML(order.room)}</td>
-                    <td>${escapeHTML(order.item)}</td>
-                    <td>${escapeHTML(timeOnly(order.time))}</td>
-                    <td><span class="status eating-finished">Eating Finished</span></td>
-                    <td><button type="button" class="collect-btn">Collect Tray</button></td>
-                </tr>
-            `).join("");
+        if (order.trayStatus === "Eating Finished") {
+            alertsHTML = alertsHTML +
+                "<tr>" +
+                "<td>" + escapeHTML(order.id) + "</td>" +
+                "<td>" + escapeHTML(order.room) + "</td>" +
+                "<td>" + escapeHTML(order.item) + "</td>" +
+                "<td>" + escapeHTML(timeOnly(order.time)) + "</td>" +
+                "<td><span class='status eating-finished'>Eating Finished</span></td>" +
+                "<td><button type='button' class='collect-btn' onclick='collectTray(" + i + ")'>Collect Tray</button></td>" +
+                "</tr>";
+            alertCount = alertCount + 1;
         }
 
-        /* History */
-        if (history.length === 0) {
-            historyBody.innerHTML = `<tr><td colspan="5">No trays collected yet.</td></tr>`;
-        } else {
-            historyBody.innerHTML = history.map(order => `
-                <tr>
-                    <td>${escapeHTML(order.id)}</td>
-                    <td>${escapeHTML(order.room)}</td>
-                    <td>${escapeHTML(order.item)}</td>
-                    <td>${escapeHTML(timeOnly(order.collectedTime))}</td>
-                    <td><span class="status tray-collected">Tray Collected</span></td>
-                </tr>
-            `).join("");
+        if (order.trayStatus === "Tray Collected") {
+            historyList.push(order);
         }
     }
 
-
-    /* ---------- Collect Tray button ---------- */
-
-    alertBody.addEventListener("click", (event) => {
-
-        const button = event.target.closest(".collect-btn");
-        if (!button) return;
-
-        const id = button.closest("tr").dataset.id;
-
-        const orders = DB.get(KEYS.FOOD);
-        const order = orders.find(o => o.id === id);
-
-        if (!order) {
-            showToast("This order no longer exists", "error");
-            render();
-            return;
+    // Itihash collected time onujayi sajano, notun age (shohoj bubble sort)
+    for (let a = 0; a < historyList.length; a++) {
+        for (let b = 0; b < historyList.length - 1 - a; b++) {
+            let timeA = parseTime(historyList[b].collectedTime);
+            let timeB = parseTime(historyList[b + 1].collectedTime);
+            if (timeA < timeB) {
+                let temp = historyList[b];
+                historyList[b] = historyList[b + 1];
+                historyList[b + 1] = temp;
+            }
         }
+    }
 
-        order.trayStatus = "Tray Collected";
-        order.collectedTime = formatNow();
-        DB.set(KEYS.FOOD, orders);
+    // Alert gulo
+    if (alertCount === 0) {
+        alertsHTML = "<tr><td colspan='6'>No trays waiting for collection.</td></tr>";
+    }
+    alertBody.innerHTML = alertsHTML;
 
-        showToast(`Tray collected from room ${order.room}`);
-        render();
-    });
+    // Itihash
+    let historyHTML = "";
+    for (let h = 0; h < historyList.length; h++) {
+        let historyOrder = historyList[h];
+        historyHTML = historyHTML +
+            "<tr>" +
+            "<td>" + escapeHTML(historyOrder.id) + "</td>" +
+            "<td>" + escapeHTML(historyOrder.room) + "</td>" +
+            "<td>" + escapeHTML(historyOrder.item) + "</td>" +
+            "<td>" + escapeHTML(timeOnly(historyOrder.collectedTime)) + "</td>" +
+            "<td><span class='status tray-collected'>Tray Collected</span></td>" +
+            "</tr>";
+    }
 
-    // New alerts from the customer page show up without a refresh
-    window.addEventListener("storage", render);
+    if (historyList.length === 0) {
+        historyHTML = "<tr><td colspan='5'>No trays collected yet.</td></tr>";
+    }
+    historyBody.innerHTML = historyHTML;
+}
 
-    render();
-});
+
+/* ---------- Collect Tray button chapar por ---------- */
+
+function collectTray(index) {
+    let orders = DB.get(KEYS.FOOD);
+    let order = orders[index];
+
+    order.trayStatus = "Tray Collected";
+    order.collectedTime = formatNow();
+    DB.set(KEYS.FOOD, orders);
+
+    showMessage("pageMessage", "Tray collected from room " + order.room + ".", "success");
+    renderTrays();
+}
+
+
+renderTrays();

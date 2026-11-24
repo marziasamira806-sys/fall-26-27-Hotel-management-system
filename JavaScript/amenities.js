@@ -1,120 +1,128 @@
+/* =====================================================================
+   amenities.js  -  Amenities request add kora, dekha, delete kora ebong search kora
+   ===================================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+// Notun item dite chaile ekhane likhe dao. Drop-down ebong list duto-i nijer theke update hoy.
+let AVAILABLE_ITEMS = ["Extra Towel", "Water Bottle", "Soap", "Toiletries Kit", "Pillow"];
 
-    // To add a new item, add it here. Dropdown and list both update.
-    const AVAILABLE_ITEMS = ["Extra Towel", "Water Bottle", "Soap", "Toiletries Kit", "Pillow"];
+let amenityForm = document.getElementById("amenity-form");
+let roomInput = document.getElementById("room-number");
+let itemSelect = document.getElementById("item-name");
+let availableList = document.getElementById("available-items-list");
+let searchInput = document.getElementById("search-input");
+let amenityBody = document.getElementById("amenity-table-body");
 
-    const form = document.querySelector(".add-amenities-card form");
-    const roomInput = document.getElementById("room-number");
-    const itemSelect = document.getElementById("item-name");
-    const availableList = document.querySelector(".available-items-list");
-
-    const searchForm = document.querySelector(".amenities-request-list .search-section form");
-    const searchInput = searchForm.querySelector('input[name="search"]');
-    const tbody = document.querySelector(".amenities-request-list tbody");
-
-
-    /* ---------- Fill the dropdown and the Available Items list ---------- */
-
-    itemSelect.innerHTML =
-        `<option value="">Select Item</option>` +
-        AVAILABLE_ITEMS.map(item => `<option value="${item}">${item}</option>`).join("");
-
-    availableList.innerHTML = AVAILABLE_ITEMS.map(item => `<li>✔ ${item}</li>`).join("");
+let amenityFields = ["room-number", "item-name"];
 
 
-    /* ---------- Show the table ---------- */
+/* ---------- Drop-down ebong Available Items list bhore dewa ---------- */
 
-    function render() {
+let optionsHTML = "<option value=''>Select Item</option>";
+let listHTML = "";
 
-        const query = searchInput.value.trim().toLowerCase();
+for (let i = 0; i < AVAILABLE_ITEMS.length; i++) {
+    optionsHTML = optionsHTML + "<option value='" + AVAILABLE_ITEMS[i] + "'>" + AVAILABLE_ITEMS[i] + "</option>";
+    listHTML = listHTML + "<li>" + AVAILABLE_ITEMS[i] + "</li>";
+}
 
-        const requests = DB.get(KEYS.AMENITIES).filter(request =>
-            String(request.room).toLowerCase().includes(query)
-        );
+itemSelect.innerHTML = optionsHTML;
+availableList.innerHTML = listHTML;
 
-        if (requests.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5">No requests found.</td></tr>`;
-            return;
+
+/* ---------- Table dekhano ---------- */
+
+function renderRequests() {
+
+    let query = searchInput.value.trim();
+    let allRequests = DB.get(KEYS.AMENITIES);
+    let rowsHTML = "";
+    let shown = 0;
+
+    for (let i = 0; i < allRequests.length; i++) {
+        let request = allRequests[i];
+
+        if (containsText(request.room, query)) {
+            rowsHTML = rowsHTML +
+                "<tr>" +
+                "<td>" + escapeHTML(request.id) + "</td>" +
+                "<td>" + escapeHTML(request.room) + "</td>" +
+                "<td>" + escapeHTML(request.item) + "</td>" +
+                "<td>" + escapeHTML(request.time) + "</td>" +
+                "<td><button type='button' class='delete-btn' onclick='deleteRequest(" + i + ")'>Delete</button></td>" +
+                "</tr>";
+            shown = shown + 1;
         }
-
-        tbody.innerHTML = requests.map(request => `
-            <tr data-id="${escapeHTML(request.id)}">
-                <td>${escapeHTML(request.id)}</td>
-                <td>${escapeHTML(request.room)}</td>
-                <td>${escapeHTML(request.item)}</td>
-                <td>${escapeHTML(request.time)}</td>
-                <td><button type="button" class="delete-btn">Delete</button></td>
-            </tr>
-        `).join("");
     }
 
-
-    /* ---------- Add a request ---------- */
-
-    form.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const room = roomInput.value.trim();
-        const item = itemSelect.value;
-
-        if (!isValidRoom(room)) {
-            showToast("Enter a valid room number, for example 305", "error");
-            roomInput.focus();
-            return;
-        }
-        if (!item) {
-            showToast("Select an item", "error");
-            itemSelect.focus();
-            return;
-        }
-
-        const requests = DB.get(KEYS.AMENITIES);
-
-        const newRequest = {
-            id: DB.nextId("AR", requests),
-            room,
-            item,
-            time: formatNow(),
-            createdAt: Date.now()
-        };
-
-        requests.push(newRequest);
-        DB.set(KEYS.AMENITIES, requests);
-
-        form.reset();
-        showToast(`Request ${newRequest.id} added`);
-        render();
-    });
+    if (shown === 0) {
+        rowsHTML = "<tr><td colspan='5'>No requests found.</td></tr>";
+    }
+    amenityBody.innerHTML = rowsHTML;
+}
 
 
-    /* ---------- Delete button inside the table ---------- */
+/* ---------- Notun request add kora ---------- */
 
-    tbody.addEventListener("click", (event) => {
+function saveRequest() {
+    clearErrors(amenityFields);
 
-        if (!event.target.closest(".delete-btn")) return;
+    let room = roomInput.value.trim();
+    let item = itemSelect.value;
+    let isValid = true;
 
-        const id = event.target.closest("tr").dataset.id;
+    if (isValidRoom(room) === false) {
+        showError("room-number", "Enter a valid room number, for example 305.");
+        isValid = false;
+    }
 
-        if (!confirm(`Delete request ${id}?`)) return;
+    if (item === "") {
+        showError("item-name", "Select an item.");
+        isValid = false;
+    }
 
-        DB.set(KEYS.AMENITIES, DB.get(KEYS.AMENITIES).filter(r => r.id !== id));
+    if (isValid === false) {
+        return false;
+    }
 
-        showToast(`Request ${id} deleted`);
-        render();
-    });
+    let requests = DB.get(KEYS.AMENITIES);
+
+    let newRequest = {
+        id: DB.nextId("AR", requests),
+        room: room,
+        item: item,
+        time: formatNow(),
+        createdAt: Number(new Date())
+    };
+
+    requests.push(newRequest);
+    DB.set(KEYS.AMENITIES, requests);
+
+    amenityForm.reset();
+    showMessage("pageMessage", "Request " + newRequest.id + " added.", "success");
+    renderRequests();
+    return false;       // false dile page reload hoy na
+}
 
 
-    /* ---------- Search ---------- */
+/* ---------- Delete button chapar por ---------- */
 
-    searchForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        render();
-    });
-    searchInput.addEventListener("input", render);
+function deleteRequest(index) {
+    let requests = DB.get(KEYS.AMENITIES);
+    let id = requests[index].id;
 
-    // If another tab changes the data, refresh the table
-    window.addEventListener("storage", render);
+    DB.set(KEYS.AMENITIES, removeAt(requests, index));
 
-    render();
-});
+    showMessage("pageMessage", "Request " + id + " deleted.", "success");
+    renderRequests();
+}
+
+
+/* ---------- Search form ---------- */
+
+function searchRequests() {
+    renderRequests();
+    return false;
+}
+
+
+renderRequests();

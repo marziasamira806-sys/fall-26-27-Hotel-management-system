@@ -10,72 +10,54 @@
 
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
+    <!-- Sidebar (baam dik-er menu) -->
+    <div class="sidebar">
 
         <div class="logo">
-            <h2>🏨 Hotel Management System</h2>
+            <h2>Hotel Management System</h2>
             <p>Room-Service Staff Portal</p>
         </div>
 
         <nav class="sidebar-menu">
-
-            <a href="dashboard_rafi.html">
-                🏠 Dashboard
-            </a>
-
-            <a href="food_order.html">
-                🛒 Food Orders
-            </a>
-
-            <a href="room_issue.html" class="active">
-                🗑 Room Issue Report
-            </a>
-
-            <a href="traycollection.html">
-                ♙ Tray Collection
-            </a>
-
-            <a href="amenities.html">
-                ♙ Amenities Request
-            </a>
-
-            <a href="login.html">
-                ↪ Logout
-            </a>
-
+            <a href="dashboard_rafi.html">Dashboard</a>
+            <a href="food_order.html">Food Orders</a>
+            <a href="room_issue.html" class="active">Room Issue Report</a>
+            <a href="traycollection.html">Tray Collection</a>
+            <a href="amenities.html">Amenities Request</a>
+            <a href="login.html" onclick="logout()">Logout</a>
         </nav>
 
-    </aside>
+    </div>
 
 
-    <!-- Main Content -->
+    <!-- Main Content (maje-r ongsho) -->
     <main class="main-content">
 
 
-        <!-- Header -->
+        <!-- Header (upor-er ongsho) -->
         <header class="top-header">
 
             <h1>3. Room Issue Report</h1>
 
             <div class="profile">
-                <span>👤</span>
-                <span>Staff Member</span>
-                <span>⌄</span>
+                <span>S</span>
+                <span id="profile-name">Staff Member</span>
             </div>
 
         </header>
 
+        <div id="pageMessage" class="message"></div>
 
-        <!-- Report Issue Section -->
+
+        <!-- Issue report korar ongsho -->
         <section class="report-section">
 
-            <!-- Report a Room Issue Form -->
+            <!-- Room Issue report korar form -->
             <div class="report-form-card">
 
-                <h2>♧ Report a Room Issue</h2>
+                <h2>Report a Room Issue</h2>
 
-                <form action="#" method="post">
+                <form action="#" method="post" id="issue-form" onsubmit="return saveIssue()">
 
                     <div class="form-group">
 
@@ -88,8 +70,9 @@
                             id="room-number"
                             name="room_number"
                             placeholder="e.g., 305"
-                            required
                         >
+
+                        <span class="error" id="room-numberError"></span>
 
                     </div>
 
@@ -105,8 +88,9 @@
                             name="problem_description"
                             placeholder="Describe the problem..."
                             rows="3"
-                            required
                         ></textarea>
+
+                        <span class="error" id="problem-descriptionError"></span>
 
                     </div>
 
@@ -120,10 +104,10 @@
             </div>
 
 
-            <!-- Issue Status Guide -->
+            <!-- Issue Status-er guide -->
             <div class="status-guide">
 
-                <h2>♙ Issue Status Guide</h2>
+                <h2>Issue Status Guide</h2>
 
                 <div class="status-item">
 
@@ -165,21 +149,23 @@
         </section>
 
 
-        <!-- Issue Report List -->
+        <!-- Issue Report-er list -->
         <section class="issue-report-list">
 
-            <h2>▣ Issue Report List</h2>
+            <h2>Issue Report List</h2>
 
 
-            <!-- Search Section -->
+            <!-- Search korar ongsho -->
             <div class="search-section">
 
-                <form action="#" method="get">
+                <form action="#" method="get" onsubmit="return searchIssues()">
 
                     <input
                         type="text"
+                        id="search-input"
                         name="search"
-                        placeholder="⌕ Search by room number..."
+                        placeholder="Search by room number..."
+                        onkeyup="renderIssues()"
                     >
 
                     <button type="submit" class="search-btn">
@@ -191,7 +177,7 @@
             </div>
 
 
-            <!-- Issue Report Table -->
+            <!-- Issue Report-er table -->
             <table>
 
                 <thead>
@@ -207,9 +193,9 @@
                 </thead>
 
 
-                <tbody>
+                <tbody id="issue-table-body">
 
-                    <!-- First Issue -->
+                    <!-- Prothom issue -->
                     <tr>
 
                         <td>IR001</td>
@@ -219,21 +205,11 @@
                         <td>AC not working</td>
 
                         <td>
-
                             <select name="status_ir001">
-                                <option value="Pending">
-                                    Pending
-                                </option>
-
-                                <option value="Processing">
-                                    Processing
-                                </option>
-
-                                <option value="Solved" selected>
-                                    Solved
-                                </option>
+                                <option value="Pending">Pending</option>
+                                <option value="Processing">Processing</option>
+                                <option value="Solved" selected>Solved</option>
                             </select>
-
                         </td>
 
                         <td>
@@ -251,7 +227,7 @@
                     </tr>
 
 
-                    <!-- Second Issue -->
+                    <!-- Ditiyo issue -->
                     <tr>
 
                         <td>IR002</td>
@@ -283,7 +259,7 @@
                     </tr>
 
 
-                    <!-- Third Issue -->
+                    <!-- Tritiyo issue -->
                     <tr>
 
                         <td>IR003</td>

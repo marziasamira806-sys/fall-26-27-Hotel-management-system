@@ -10,49 +10,50 @@
 
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
+    <!-- Sidebar (baam dik-er menu) -->
+    <div class="sidebar">
 
         <div class="logo">
-            <h2>🏨 Hotel Management System</h2>
+            <h2>Hotel Management System</h2>
             <p>Room-Service Staff Portal</p>
         </div>
 
         <nav class="sidebar-menu">
-            <a href="dashboard_rafi.html">🏠 Dashboard</a>
-            <a href="food_order.html" class="active">🛒 Food Orders</a>
-            <a href="room_issue.html">🗑 Room Issue Report</a>
-            <a href="traycollection.html">🛒 Tray Collection</a>
-            <a href="amenities.html">♙ Amenities Request</a>
-            <a href="login.html">↪ Logout</a>
+            <a href="dashboard_rafi.html">Dashboard</a>
+            <a href="food_order.html" class="active">Food Orders</a>
+            <a href="room_issue.html">Room Issue Report</a>
+            <a href="traycollection.html">Tray Collection</a>
+            <a href="amenities.html">Amenities Request</a>
+            <a href="login.html" onclick="logout()">Logout</a>
         </nav>
 
-    </aside>
+    </div>
 
 
-    <!-- Main Content -->
+    <!-- Main Content (maje-r ongsho) -->
     <main class="main-content">
 
-        <!-- Header -->
+        <!-- Header (upor-er ongsho) -->
         <header class="top-header">
 
             <h1>2. Food Order Management</h1>
 
             <div class="profile">
-                <span>👤</span>
-                <span>Staff Member</span>
-                <span>⌄</span>
+                <span>S</span>
+                <span id="profile-name">Staff Member</span>
             </div>
 
         </header>
 
+        <div id="pageMessage" class="message"></div>
 
-        <!-- Create / Manage Food Orders -->
+
+        <!-- Food Order toiri / porichalona -->
         <section class="order-form-section">
 
-            <h2>♧ Create / Manage Food Orders</h2>
+            <h2>Create / Manage Food Orders</h2>
 
-            <form action="#" method="post">
+            <form action="#" method="post" id="order-form" onsubmit="return saveOrder()">
 
                 <div class="form-group">
 
@@ -63,8 +64,9 @@
                         id="room-number"
                         name="room_number"
                         placeholder="e.g., 305"
-                        required
                     >
+
+                    <span class="error" id="room-numberError"></span>
 
                 </div>
 
@@ -73,7 +75,7 @@
 
                     <label for="food-item">Food Item</label>
 
-                    <select id="food-item" name="food_item" required>
+                    <select id="food-item" name="food_item">
 
                         <option value="">Select Food Item</option>
                         <option value="Chicken Burger">Chicken Burger</option>
@@ -84,6 +86,8 @@
                         <option value="Soup">Soup</option>
 
                     </select>
+
+                    <span class="error" id="food-itemError"></span>
 
                 </div>
 
@@ -98,14 +102,34 @@
                         name="quantity"
                         value="1"
                         min="1"
-                        required
                     >
+
+                    <span class="error" id="quantityError"></span>
 
                 </div>
 
 
-                <button type="submit" class="add-order-btn">
+                <!-- Shudhu order edit korar shomoy dekhay -->
+                <div class="form-group edit-only" id="status-group">
+
+                    <label for="order-status">Status</label>
+
+                    <select id="order-status" name="status">
+                        <option value="Pending">Pending</option>
+                        <option value="Preparing">Preparing</option>
+                        <option value="Delivered">Delivered</option>
+                    </select>
+
+                </div>
+
+
+                <button type="submit" class="add-order-btn" id="order-submit">
                     Add Order
+                </button>
+
+                <!-- Shudhu order edit korar shomoy dekhay -->
+                <button type="button" class="delete-btn edit-only" id="cancel-btn" onclick="exitEditMode()">
+                    Cancel
                 </button>
 
             </form>
@@ -113,21 +137,23 @@
         </section>
 
 
-        <!-- Food Order List -->
+        <!-- Food Order-er list -->
         <section class="food-order-list">
 
-            <h2>♧ Food Order List</h2>
+            <h2>Food Order List</h2>
 
 
-            <!-- Search and Filter -->
+            <!-- Search ebong Filter -->
             <div class="search-filter">
 
-                <form action="#" method="get">
+                <form action="#" method="get" onsubmit="return searchOrders()">
 
                     <input
                         type="text"
+                        id="search-input"
                         name="search"
                         placeholder="Search by order ID or room number..."
+                        onkeyup="renderOrders()"
                     >
 
                     <button type="submit" class="search-btn">
@@ -137,7 +163,7 @@
                 </form>
 
 
-                <select name="status-filter" id="status-filter">
+                <select name="status-filter" id="status-filter" onchange="renderOrders()">
 
                     <option value="">All Status</option>
                     <option value="Pending">Pending</option>
@@ -149,7 +175,7 @@
             </div>
 
 
-            <!-- Order Table -->
+            <!-- Order-er table -->
             <table>
 
                 <thead>
@@ -167,7 +193,7 @@
                 </thead>
 
 
-                <tbody>
+                <tbody id="order-table-body">
 
                     <tr>
 
@@ -263,10 +289,9 @@
 
     </main>
 
-<script src="../fall-26-27-Hotel-management-system/JavaScript/storage.js"></script>
+    <script src="../fall-26-27-Hotel-management-system/JavaScript/storage.js"></script>
     <script src="../fall-26-27-Hotel-management-system/JavaScript/common.js"></script>
     <script src="../fall-26-27-Hotel-management-system/JavaScript/food_order.js"></script>
-
 
 </body>
 

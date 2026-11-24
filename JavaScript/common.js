@@ -1,110 +1,141 @@
+/* =====================================================================
+   common.js  -  Shob page-e use hoy emon helper function gulo
+   ---------------------------------------------------------------------
+   storage.js-er por, ar proti page-er nijer script-er age load hoy.
+   ===================================================================== */
 
-const REQUIRE_LOGIN = false;
+
+/* ---------- 1. Message ----------
+   Proti page-e <div id="pageMessage" class="message"></div> ache.
+   type hocche "success", "error" ba "info" (egulo CSS class). */
+
+function showMessage(boxId, text, type) {
+    let box = document.getElementById(boxId);
+    box.innerHTML = text;
+    box.className = "message " + type;
+    box.style.display = "block";
+}
+
+function hideMessage(boxId) {
+    document.getElementById(boxId).style.display = "none";
+}
+
+// Jate onno page showToast(...) call korle-o kaj kore
+function showToast(message, type) {
+    if (type === undefined) {
+        type = "success";
+    }
+
+    if (document.getElementById("pageMessage") == null) {
+        alert(message);
+    } else {
+        showMessage("pageMessage", message, type);
+    }
+}
 
 
-/* ---------- Toast message (small popup, bottom-right) ---------- */
+/* ---------- 2. Field-er pashe error dekhano ----------
+   Je field check kora hoy tar pashe <span class="error" id="fieldIdError"></span> ache.
+   Amra innerHTML diye error likhi ar element.style diye
+   field-er border lal kori. */
 
-(function addToastStyles() {
-    const style = document.createElement("style");
-    style.textContent = `
-        #toast {
-            position: fixed;
-            right: 24px;
-            bottom: 24px;
-            z-index: 9999;
-            padding: 12px 18px;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 13px;
-            font-weight: 700;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transform: translateY(12px);
-            transition: opacity 0.25s ease, transform 0.25s ease;
-            pointer-events: none;
+function showError(fieldId, message) {
+    let errorBox = document.getElementById(fieldId + "Error");
+    if (errorBox != null) {
+        errorBox.innerHTML = message;
+    }
+
+    let field = document.getElementById(fieldId);
+    if (field != null) {
+        field.style.border = "2px solid red";
+    }
+}
+
+function clearError(fieldId) {
+    let errorBox = document.getElementById(fieldId + "Error");
+    if (errorBox != null) {
+        errorBox.innerHTML = "";
+    }
+
+    let field = document.getElementById(fieldId);
+    if (field != null) {
+        field.style.border = "";   // "" dile border CSS file-er moto hoye jay
+    }
+}
+
+// Onek field-er error ekshathe muchhe dey; fieldIds ekta array
+function clearErrors(fieldIds) {
+    for (let i = 0; i < fieldIds.length; i++) {
+        clearError(fieldIds[i]);
+    }
+}
+
+
+/* ---------- 3. List-er jonno chhoto helper ---------- */
+
+// "text"-er bhitore "keyword" thakle true dey (boro/chhoto hater lekha dhorbe na)
+function containsText(text, keyword) {
+    return String(text).toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+}
+
+// Je object-er id mile jay tar position (index) dey, na paile -1
+function findIndexById(list, id) {
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].id === id) {
+            return i;
         }
-        #toast.show    { opacity: 1; transform: none; }
-        #toast.success { background: #19a34a; }
-        #toast.error   { background: #d62835; }
-        #toast.info    { background: #0875dc; }
-    `;
-    document.head.appendChild(style);
-})();
+    }
+    return -1;
+}
+
+// "index"-er element chhara notun ekta array dey
+function removeAt(list, index) {
+    return list.slice(0, index).concat(list.slice(index + 1));
+}
 
 
-/* ---------- Auto Tray Collection (order place howar 10 min pore automatic alert) ---------- */
+/* ---------- 4. Auto Tray Collection ----------
+   Delivered order-er 10 minute pare "Eating Finished" alert chole ashe.
+   Page load hole ekbar-i chole. */
 
 function checkAutoTrayCollection() {
-    const orders = DB.get(KEYS.FOOD);
-    const now = Date.now();
-    const TEN_MINUTES = 10 * 60 * 1000;
-    let changed = false;
+    let orders = DB.get(KEYS.FOOD);
+    let now = Number(new Date());
+    let tenMinutes = 10 * 60 * 1000;
 
-    orders.forEach(order => {
-        const placedAt = order.createdAt || parseTime(order.time);
-
-        if (!order.trayStatus && placedAt && (now - placedAt >= TEN_MINUTES)) {
-            order.trayStatus = "Eating Finished";
-            changed = true;
+    for (let i = 0; i < orders.length; i++) {
+        let order = orders[i];
+        let placedAt = order.createdAt;
+        if (!placedAt) {
+            placedAt = parseTime(order.time);
         }
-    });
 
-    if (changed) {
-        DB.set(KEYS.FOOD, orders);
-        window.dispatchEvent(new Event("storage")); // sob page ke janiye dibe je data change hoise
+        if (order.status === "Delivered" && !order.trayStatus && placedAt && (now - placedAt >= tenMinutes)) {
+            order.trayStatus = "Eating Finished";
+        }
     }
+
+    DB.set(KEYS.FOOD, orders);
 }
 
 
-// showToast("Order added", "success")   types: success | error | info
-function showToast(message, type = "success") {
-    let toast = document.getElementById("toast");
+/* ---------- 5. Profile-er nam ebong logout ---------- */
 
-    if (!toast) {
-        toast = document.createElement("div");
-        toast.id = "toast";
-        document.body.appendChild(toast);
+function showProfileName() {
+    let user = memoryStore[KEYS.USER];
+    let nameBox = document.getElementById("profile-name");
+
+    if (user != null && user.name && nameBox != null) {
+        nameBox.innerHTML = user.name;
     }
+}
 
-    toast.textContent = message;
-    toast.className = `${type} show`;
-
-    clearTimeout(toast.hideTimer);
-    toast.hideTimer = setTimeout(() => toast.classList.remove("show"), 2500);
+// Logout link eta call kore, tarpor login.html-e jay
+function logout() {
+    memoryStore[KEYS.USER] = undefined;
 }
 
 
-/* ---------- Login check, profile name, logout ---------- */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    checkAutoTrayCollection();                      // page load hobar shathe shathe ekbar check
-    setInterval(checkAutoTrayCollection, 15000);     // tarpor every 15 sec check hote thakbe
-
-    let user = null;
-    try {
-        user = JSON.parse(localStorage.getItem(KEYS.USER));
-    } catch (error) {
-        user = null;
-    }
-
-    // Not logged in -> back to the login page
-    if (REQUIRE_LOGIN && !user) {
-        window.location.href = "login.html";
-        return;
-    }
-
-    // Show the logged-in name in the top-right profile box
-    const nameBox = document.querySelector(".profile span:nth-child(2)");
-    if (user && user.name && nameBox) {
-        nameBox.textContent = user.name;
-    }
-
-    // Logout link: clear the session, then let the link go to login.html
-    const logoutLink = document.querySelector('.sidebar-menu a[href="login.html"]');
-    if (logoutLink) {
-        logoutLink.addEventListener("click", () => {
-            localStorage.removeItem(KEYS.USER);
-        });
-    }
-});
+// Page load hole ekbar chole (script gulo <body>-r sheshe ache)
+checkAutoTrayCollection();
+showProfileName();

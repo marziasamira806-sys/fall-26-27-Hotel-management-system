@@ -10,51 +10,52 @@
 
 <body>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
+    <!-- Sidebar (baam dik-er menu) -->
+    <div class="sidebar">
 
         <div class="logo">
-            <h2>🏨 Hotel Management System</h2>
+            <h2>Hotel Management System</h2>
             <p>Room-Service Staff Portal</p>
         </div>
 
-       <nav class="sidebar-menu">
-            <a href="dashboard_rafi.html">🏠 Dashboard</a>
-            <a href="food_order.html">🛒 Food Orders</a>
-            <a href="room_issue.html">🗑 Room Issue Report</a>
-            <a href="traycollection.html"class="active">🛒 Tray Collection</a>
-            <a href="amenities.html">♙ Amenities Request</a>
-            <a href="login.html">↪ Logout</a>
+        <nav class="sidebar-menu">
+            <a href="dashboard_rafi.html">Dashboard</a>
+            <a href="food_order.html">Food Orders</a>
+            <a href="room_issue.html">Room Issue Report</a>
+            <a href="traycollection.html" class="active">Tray Collection</a>
+            <a href="amenities.html">Amenities Request</a>
+            <a href="login.html" onclick="logout()">Logout</a>
         </nav>
 
-    </aside>
+    </div>
 
 
-    <!-- Main Content -->
+    <!-- Main Content (maje-r ongsho) -->
     <main class="main-content">
 
 
-        <!-- Header -->
+        <!-- Header (upor-er ongsho) -->
         <header class="top-header">
 
             <h1>4. Tray Collection Alert</h1>
 
             <div class="profile">
-                <span>👤</span>
-                <span>Staff Member</span>
-                <span>⌄</span>
+                <span>S</span>
+                <span id="profile-name">Staff Member</span>
             </div>
 
         </header>
 
+        <div id="pageMessage" class="message"></div>
 
-        <!-- Tray Collection Alerts -->
+
+        <!-- Tray Collection-er alert -->
         <section class="tray-alert-section">
 
-            <h2>🔔 Tray Collection Alerts (Eating Finished)</h2>
+            <h2>Tray Collection Alerts (Eating Finished)</h2>
 
 
-            <!-- Alert Table -->
+            <!-- Alert-er table -->
             <table>
 
                 <thead>
@@ -71,9 +72,9 @@
                 </thead>
 
 
-                <tbody>
+                <tbody id="tray-alert-body">
 
-                    <!-- First Alert -->
+                    <!-- Prothom alert -->
                     <tr>
 
                         <td>FO101</td>
@@ -99,7 +100,7 @@
                     </tr>
 
 
-                    <!-- Second Alert -->
+                    <!-- Ditiyo alert -->
                     <tr>
 
                         <td>FO102</td>
@@ -132,13 +133,13 @@
 
 
 
-        <!-- Tray Collection History -->
+        <!-- Tray Collection-er itihash -->
         <section class="tray-history-section">
 
-            <h2>◴ Tray Collection History</h2>
+            <h2>Tray Collection History</h2>
 
 
-            <!-- History Table -->
+            <!-- Itihash-er table -->
             <table>
 
                 <thead>
@@ -154,9 +155,9 @@
                 </thead>
 
 
-                <tbody>
+                <tbody id="tray-history-body">
 
-                    <!-- First History -->
+                    <!-- Prothom itihash -->
                     <tr>
 
                         <td>FO098</td>
@@ -176,7 +177,7 @@
                     </tr>
 
 
-                    <!-- Second History -->
+                    <!-- Ditiyo itihash -->
                     <tr>
 
                         <td>FO099</td>
@@ -196,7 +197,7 @@
                     </tr>
 
 
-                    <!-- Third History -->
+                    <!-- Tritiyo itihash -->
                     <tr>
 
                         <td>FO100</td>

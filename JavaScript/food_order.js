@@ -1,229 +1,203 @@
+/* =====================================================================
+   food_order.js  -  Food order toiri, dekha, update, delete ebong search
+   ---------------------------------------------------------------------
+   Read    - renderOrders() array-er upor loop chalay ebong table-er row banay
+   Search  - ei renderOrders()-i je row mile na seta bad dey
+   Create  - saveOrder() form check kore, tarpor notun object push() kore
+   Update  - editOrder() form bhore dey, saveOrder() object bodle dey
+   Delete  - deleteOrder() common.js-er removeAt() bebohar kore
+   ===================================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+let editId = null;     // Je order edit hocche tar id (null mane notun order add hocche)
 
-    const STATUSES = ["Pending", "Preparing", "Delivered"];
+let orderForm = document.getElementById("order-form");
+let roomInput = document.getElementById("room-number");
+let itemSelect = document.getElementById("food-item");
+let qtyInput = document.getElementById("quantity");
+let statusGroup = document.getElementById("status-group");
+let statusSelect = document.getElementById("order-status");
+let submitBtn = document.getElementById("order-submit");
+let cancelBtn = document.getElementById("cancel-btn");
+let searchInput = document.getElementById("search-input");
+let statusFilter = document.getElementById("status-filter");
+let orderBody = document.getElementById("order-table-body");
 
-    const form = document.querySelector(".order-form-section form");
-    const roomInput = document.getElementById("room-number");
-    const itemSelect = document.getElementById("food-item");
-    const qtyInput = document.getElementById("quantity");
-    const submitBtn = form.querySelector(".add-order-btn");
-
-    const searchForm = document.querySelector(".food-order-list .search-filter form");
-    const searchInput = searchForm.querySelector('input[name="search"]');
-    const statusFilter = document.getElementById("status-filter");
-    const tbody = document.querySelector(".food-order-list tbody");
-
-    let editingId = null;     // ID of the order being edited (null = adding a new one)
-    let statusGroup = null;   // "Status" dropdown, created only when editing
-    let cancelBtn = null;     // "Cancel" button, created only when editing
+let orderFields = ["room-number", "food-item", "quantity"];
 
 
-    /* ---------- Show the table ---------- */
+/* ---------- Table dekhano ---------- */
 
-    function render() {
+function renderOrders() {
 
-        const query = searchInput.value.trim().toLowerCase();
-        const status = statusFilter.value;
+    let query = searchInput.value.trim();
+    let status = statusFilter.value;
 
-        const orders = DB.get(KEYS.FOOD).filter(order => {
-            const matchesSearch =
-                order.id.toLowerCase().includes(query) ||
-                String(order.room).toLowerCase().includes(query);
-            const matchesStatus = status === "" || order.status === status;
-            return matchesSearch && matchesStatus;
-        });
+    let allOrders = DB.get(KEYS.FOOD);
+    let rowsHTML = "";
+    let shown = 0;
 
-        if (orders.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8">No orders found.</td></tr>`;
-            return;
+    for (let i = 0; i < allOrders.length; i++) {
+        let order = allOrders[i];
+        let matchesSearch = containsText(order.id, query) || containsText(order.room, query);
+        let matchesStatus = (status === "") || (order.status === status);
+
+        if (matchesSearch && matchesStatus) {
+            rowsHTML = rowsHTML +
+                "<tr>" +
+                "<td>" + escapeHTML(order.id) + "</td>" +
+                "<td>" + escapeHTML(order.room) + "</td>" +
+                "<td>" + escapeHTML(order.item) + "</td>" +
+                "<td>" + escapeHTML(order.qty) + "</td>" +
+                "<td>" + escapeHTML(order.time) + "</td>" +
+                "<td><span class='status " + statusClass(order.status) + "'>" + escapeHTML(order.status) + "</span></td>" +
+                "<td><button type='button' class='edit-btn' onclick='editOrder(" + i + ")'>Edit</button></td>" +
+                "<td><button type='button' class='delete-btn' onclick='deleteOrder(" + i + ")'>Delete</button></td>" +
+                "</tr>";
+            shown = shown + 1;
         }
-
-        tbody.innerHTML = orders.map(order => `
-            <tr data-id="${escapeHTML(order.id)}">
-                <td>${escapeHTML(order.id)}</td>
-                <td>${escapeHTML(order.room)}</td>
-                <td>${escapeHTML(order.item)}</td>
-                <td>${escapeHTML(order.qty)}</td>
-                <td>${escapeHTML(order.time)}</td>
-                <td>
-                    <span class="status ${statusClass(order.status)}">${escapeHTML(order.status)}</span>
-                </td>
-                <td><button type="button" class="edit-btn">Edit</button></td>
-                <td><button type="button" class="delete-btn">Delete</button></td>
-            </tr>
-        `).join("");
     }
 
+    if (shown === 0) {
+        rowsHTML = "<tr><td colspan='8'>No orders found.</td></tr>";
+    }
+    orderBody.innerHTML = rowsHTML;
+}
 
-    /* ---------- Edit mode ---------- */
 
-    function enterEditMode(order) {
+/* ---------- Add / Update ---------- */
 
-        editingId = order.id;
+function saveOrder() {
+    clearErrors(orderFields);
 
-        roomInput.value = order.room;
-        qtyInput.value = order.qty;
+    let room = roomInput.value.trim();
+    let item = itemSelect.value;
+    let qty = Number(qtyInput.value);
+    let isValid = true;
 
-        // If the item is not in the dropdown (e.g. added from another page), add it
-        const hasItem = Array.from(itemSelect.options).some(option => option.value === order.item);
-        if (!hasItem) {
-            itemSelect.add(new Option(order.item, order.item));
-        }
-        itemSelect.value = order.item;
-
-        submitBtn.textContent = "Update Order";
-
-        // Status dropdown (only while editing)
-        if (!statusGroup) {
-            statusGroup = document.createElement("div");
-            statusGroup.className = "form-group";
-            statusGroup.innerHTML = `
-                <label for="order-status">Status</label>
-                <select id="order-status" name="status">
-                    ${STATUSES.map(s => `<option value="${s}">${s}</option>`).join("")}
-                </select>
-            `;
-        }
-        statusGroup.querySelector("select").value = order.status;
-        submitBtn.before(statusGroup);
-
-        // Cancel button (only while editing)
-        if (!cancelBtn) {
-            cancelBtn = document.createElement("button");
-            cancelBtn.type = "button";
-            cancelBtn.className = "delete-btn";
-            cancelBtn.textContent = "Cancel";
-            cancelBtn.addEventListener("click", exitEditMode);
-        }
-        submitBtn.after(cancelBtn);
-
-        form.scrollIntoView({ behavior: "smooth", block: "start" });
-        roomInput.focus();
+    if (isValidRoom(room) === false) {
+        showError("room-number", "Enter a valid room number, for example 305.");
+        isValid = false;
     }
 
-    function exitEditMode() {
-        editingId = null;
-        form.reset();                       // quantity goes back to 1
-        submitBtn.textContent = "Add Order";
-        if (statusGroup) statusGroup.remove();
-        if (cancelBtn) cancelBtn.remove();
+    if (item === "") {
+        showError("food-item", "Select a food item.");
+        isValid = false;
     }
 
+    let qtyIsOk = (qty >= 1) && (qty === Math.floor(qty));
+    if (qtyIsOk === false) {
+        showError("quantity", "Quantity must be a whole number, 1 or more.");
+        isValid = false;
+    }
 
-    /* ---------- Add / Update ---------- */
+    if (isValid === false) {
+        return false;
+    }
 
-    form.addEventListener("submit", (event) => {
-        event.preventDefault();
+    let orders = DB.get(KEYS.FOOD);
 
-        const room = roomInput.value.trim();
-        const item = itemSelect.value;
-        const qty = parseInt(qtyInput.value, 10);
+    if (editId !== null) {
 
-        if (!isValidRoom(room)) {
-            showToast("Enter a valid room number, for example 305", "error");
-            roomInput.focus();
-            return;
-        }
-        if (!item) {
-            showToast("Select a food item", "error");
-            itemSelect.focus();
-            return;
-        }
-        if (!Number.isInteger(qty) || qty < 1) {
-            showToast("Quantity must be 1 or more", "error");
-            qtyInput.focus();
-            return;
+        let orderIndex = findIndexById(orders, editId);
+        if (orderIndex === -1) {
+            showMessage("pageMessage", "This order no longer exists.", "error");
+            exitEditMode();
+            renderOrders();
+            return false;
         }
 
-        const orders = DB.get(KEYS.FOOD);
+        let order = orders[orderIndex];
+        order.room = room;
+        order.item = item;
+        order.qty = qty;
+        order.status = statusSelect.value;
 
-        if (editingId) {
-
-            const order = orders.find(o => o.id === editingId);
-
-            if (!order) {
-                showToast("This order no longer exists", "error");
-                exitEditMode();
-                render();
-                return;
-            }
-
-            order.room = room;
-            order.item = item;
-            order.qty = qty;
-            order.status = statusGroup.querySelector("select").value;
-
-            // A tray alert only makes sense for a delivered order
-            if (order.status !== "Delivered") {
-                order.trayStatus = "";
-                order.collectedTime = "";
-            }
-
-            showToast(`Order ${order.id} updated`);
-
-        } else {
-
-            const newOrder = {
-                id: DB.nextId("FO", orders),
-                room,
-                item,
-                qty,
-                status: "Pending",
-                trayStatus: "",
-                collectedTime: "",
-                time: formatNow(),
-                createdAt: Date.now()
-            };
-
-            orders.push(newOrder);
-            showToast(`Order ${newOrder.id} added`);
+        // Tray alert shudhu delivered order-er jonno ortho rakhe
+        if (order.status !== "Delivered") {
+            order.trayStatus = "";
+            order.collectedTime = "";
         }
 
-        DB.set(KEYS.FOOD, orders);
+        showMessage("pageMessage", "Order " + order.id + " updated.", "success");
+
+    } else {
+
+        let newOrder = {
+            id: DB.nextId("FO", orders),
+            room: room,
+            item: item,
+            qty: qty,
+            status: "Pending",
+            trayStatus: "",
+            collectedTime: "",
+            time: formatNow(),
+            createdAt: Number(new Date())
+        };
+
+        orders.push(newOrder);
+        showMessage("pageMessage", "Order " + newOrder.id + " added.", "success");
+    }
+
+    DB.set(KEYS.FOOD, orders);
+    exitEditMode();
+    renderOrders();
+    return false;       // false dile page reload hoy na
+}
+
+
+/* ---------- Edit mode (Edit button chapar por) ---------- */
+
+function editOrder(index) {
+    let order = DB.get(KEYS.FOOD)[index];
+
+    clearErrors(orderFields);
+    hideMessage("pageMessage");
+
+    editId = order.id;
+    roomInput.value = order.room;
+    itemSelect.value = order.item;
+    qtyInput.value = order.qty;
+    statusSelect.value = order.status;
+
+    submitBtn.innerHTML = "Update Order";
+    statusGroup.style.display = "block";
+    cancelBtn.style.display = "block";
+}
+
+function exitEditMode() {
+    editId = null;
+    orderForm.reset();                  // quantity abar 1 hoye jay
+    clearErrors(orderFields);
+
+    submitBtn.innerHTML = "Add Order";
+    statusGroup.style.display = "none";
+    cancelBtn.style.display = "none";
+}
+
+
+/* ---------- Delete button chapar por ---------- */
+
+function deleteOrder(index) {
+    let orders = DB.get(KEYS.FOOD);
+    let id = orders[index].id;
+
+    DB.set(KEYS.FOOD, removeAt(orders, index));
+
+    if (editId === id) {
         exitEditMode();
-        render();
-    });
+    }
+
+    showMessage("pageMessage", "Order " + id + " deleted.", "success");
+    renderOrders();
+}
 
 
-    /* ---------- Edit / Delete buttons inside the table ---------- */
+/* ---------- Search form ---------- */
 
-    tbody.addEventListener("click", (event) => {
-
-        const row = event.target.closest("tr[data-id]");
-        if (!row) return;
-
-        const id = row.dataset.id;
-
-        if (event.target.closest(".edit-btn")) {
-            const order = DB.get(KEYS.FOOD).find(o => o.id === id);
-            if (order) enterEditMode(order);
-        }
-
-        if (event.target.closest(".delete-btn")) {
-            if (!confirm(`Delete order ${id}?`)) return;
-
-            DB.set(KEYS.FOOD, DB.get(KEYS.FOOD).filter(o => o.id !== id));
-
-            if (editingId === id) exitEditMode();
-
-            showToast(`Order ${id} deleted`);
-            render();
-        }
-    });
+function searchOrders() {
+    renderOrders();
+    return false;
+}
 
 
-    /* ---------- Search and filter ---------- */
-
-    searchForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        render();
-    });
-    searchInput.addEventListener("input", render);
-    statusFilter.addEventListener("change", render);
-
-    // If another tab changes the data, refresh the table
-    window.addEventListener("storage", render);
-
-    render();
-});
+renderOrders();
